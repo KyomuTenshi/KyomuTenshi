@@ -76,17 +76,12 @@ First-person psychological horror / walking simulator about grief, guilt and mem
 - **Status:** MVP in development
 - <sub>3D models: pizzadoggy asset pack. Music is not my own.</sub>
 
-<!-- Uncomment after making the repository public
 ### ⚔️ [Souls-Like Prototype](https://github.com/KyomuTenshi/Souls-Like-Prototype)
-A personal prototype inspired by Souls-like games, built to practice designing and programming gameplay mechanics and game systems.
+A Souls-like action game prototype, built to practice designing and programming gameplay mechanics, game architecture and clean C# code.
+
+- Personal project, developed solo
+- Focus: gameplay mechanics, game systems and maintainable code structure
 - **Stack:** Unity, C#
--->
-
-### 📱 [Nexora](https://github.com/KyomuTenshi/Nexora-DevBuild)
-A cross-platform mobile app for watching anime and reading manga. UI designed in Figma, built with Flutter and Dart.
-
-### ☕ [Transaction Analyzer](https://github.com/KyomuTenshi/Transaction-Analyzer)
-A console Java application for practicing Java Core: data processing with Streams and generics, OOP and layered architecture.
 
 <p align="center">
   <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=14&duration=3500&pause=1500&color=1F6FEB&center=true&vCenter=true&width=480&height=25&lines=%2F%2F+cataloging+supplies+before+the+next+level;%2F%2F+almost+run+out+of+almond+water" alt="loop" />
