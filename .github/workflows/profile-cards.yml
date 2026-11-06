@@ -1,0 +1,189 @@
+name: Generate profile cards
+
+on:
+  schedule:
+    - cron: "17 */3 * * *"
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: profile-cards
+  cancel-in-progress: false
+
+env:
+  USER_NAME: ${{ github.repository_owner }}
+  LIGHT: bg_color=FFFDF8&border_color=F3CBD9&title_color=E27396&icon_color=6CB4D9&text_color=4B4453&ring_color=E27396
+  DARK: bg_color=0D1117&border_color=30363D&title_color=F4A6BD&icon_color=8FD3F0&text_color=C9D1D9&ring_color=F4A6BD
+  STREAK_LIGHT: background=FFFDF8&border=F3CBD9&stroke=F3CBD9&ring=E27396&fire=E27396&currStreakLabel=E27396&currStreakNum=3A4A6B&sideNums=3A4A6B&sideLabels=6CB4D9&dates=8C8597
+  STREAK_DARK: background=0D1117&border=30363D&stroke=30363D&ring=F4A6BD&fire=F4A6BD&currStreakLabel=F4A6BD&currStreakNum=FFFFFF&sideNums=FFFFFF&sideLabels=8FD3F0&dates=8B949E
+  LANGS: layout=compact&langs_count=6&hide=shaderlab,hlsl,glsl&card_width=420
+  PIN: description_lines_count=2
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Snake
+        uses: Platane/snk@v3
+        with:
+          github_user_name: ${{ github.repository_owner }}
+          outputs: |
+            dist/snake.svg?color_snake=#E27396&color_dots=#F3F0EA,#FBD9E4,#F6B8CC,#EE93B0,#E27396
+            dist/snake-dark.svg?palette=github-dark&color_snake=#F4A6BD&color_dots=#161B22,#3B2730,#6B3A4E,#A9567A,#F4A6BD
+
+      # snk runs in Docker as root, so hand the folder back to the runner user
+      - name: Fix dist permissions
+        run: sudo chown -R "$(id -u):$(id -g)" dist
+
+      # ---------- light ----------
+      - name: Stats (light)
+        uses: stats-organization/github-readme-stats-action@v2
+        with:
+          card: stats
+          options: username=${{ env.USER_NAME }}&show_icons=true&${{ env.LIGHT }}
+          path: dist/stats-light.svg
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fail_on_error: "true"
+      - name: Top languages (light)
+        uses: stats-organization/github-readme-stats-action@v2
+        with:
+          card: top-langs
+          options: username=${{ env.USER_NAME }}&${{ env.LANGS }}&${{ env.LIGHT }}
+          path: dist/top-langs-light.svg
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fail_on_error: "true"
+      - name: Streak (light)
+        uses: DenverCoder1/github-readme-streak-stats@v1
+        with:
+          options: user=${{ env.USER_NAME }}&${{ env.STREAK_LIGHT }}
+          path: dist/streak-light.svg
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Pin ANCESTRA (light)
+        uses: stats-organization/github-readme-stats-action@v2
+        with:
+          card: pin
+          options: username=${{ env.USER_NAME }}&repo=Ancestra-DevBuild&${{ env.PIN }}&${{ env.LIGHT }}
+          path: dist/pin-ancestra-light.svg
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fail_on_error: "true"
+      - name: Pin Souls-Like (light)
+        uses: stats-organization/github-readme-stats-action@v2
+        with:
+          card: pin
+          options: username=${{ env.USER_NAME }}&repo=Souls-Like-Prototype&${{ env.PIN }}&${{ env.LIGHT }}
+          path: dist/pin-souls-like-light.svg
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fail_on_error: "true"
+      - name: Pin Transaction Analyzer (light)
+        uses: stats-organization/github-readme-stats-action@v2
+        with:
+          card: pin
+          options: username=${{ env.USER_NAME }}&repo=Transaction-Analyzer&${{ env.PIN }}&${{ env.LIGHT }}
+          path: dist/pin-transaction-analyzer-light.svg
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fail_on_error: "true"
+      - name: Pin Nexora (light)
+        uses: stats-organization/github-readme-stats-action@v2
+        with:
+          card: pin
+          options: username=${{ env.USER_NAME }}&repo=Nexora-DevBuild&${{ env.PIN }}&${{ env.LIGHT }}
+          path: dist/pin-nexora-light.svg
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fail_on_error: "true"
+
+      # ---------- dark ----------
+      - name: Stats (dark)
+        uses: stats-organization/github-readme-stats-action@v2
+        with:
+          card: stats
+          options: username=${{ env.USER_NAME }}&show_icons=true&${{ env.DARK }}
+          path: dist/stats-dark.svg
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fail_on_error: "true"
+      - name: Top languages (dark)
+        uses: stats-organization/github-readme-stats-action@v2
+        with:
+          card: top-langs
+          options: username=${{ env.USER_NAME }}&${{ env.LANGS }}&${{ env.DARK }}
+          path: dist/top-langs-dark.svg
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fail_on_error: "true"
+      - name: Streak (dark)
+        uses: DenverCoder1/github-readme-streak-stats@v1
+        with:
+          options: user=${{ env.USER_NAME }}&${{ env.STREAK_DARK }}
+          path: dist/streak-dark.svg
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Pin ANCESTRA (dark)
+        uses: stats-organization/github-readme-stats-action@v2
+        with:
+          card: pin
+          options: username=${{ env.USER_NAME }}&repo=Ancestra-DevBuild&${{ env.PIN }}&${{ env.DARK }}
+          path: dist/pin-ancestra-dark.svg
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fail_on_error: "true"
+      - name: Pin Souls-Like (dark)
+        uses: stats-organization/github-readme-stats-action@v2
+        with:
+          card: pin
+          options: username=${{ env.USER_NAME }}&repo=Souls-Like-Prototype&${{ env.PIN }}&${{ env.DARK }}
+          path: dist/pin-souls-like-dark.svg
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fail_on_error: "true"
+      - name: Pin Transaction Analyzer (dark)
+        uses: stats-organization/github-readme-stats-action@v2
+        with:
+          card: pin
+          options: username=${{ env.USER_NAME }}&repo=Transaction-Analyzer&${{ env.PIN }}&${{ env.DARK }}
+          path: dist/pin-transaction-analyzer-dark.svg
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fail_on_error: "true"
+      - name: Pin Nexora (dark)
+        uses: stats-organization/github-readme-stats-action@v2
+        with:
+          card: pin
+          options: username=${{ env.USER_NAME }}&repo=Nexora-DevBuild&${{ env.PIN }}&${{ env.DARK }}
+          path: dist/pin-nexora-dark.svg
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fail_on_error: "true"
+
+      - name: Check cards
+        run: |
+          set -e
+          expected="snake snake-dark stats-light stats-dark top-langs-light top-langs-dark streak-light streak-dark pin-ancestra-light pin-ancestra-dark pin-souls-like-light pin-souls-like-dark pin-transaction-analyzer-light pin-transaction-analyzer-dark pin-nexora-light pin-nexora-dark"
+          for name in $expected; do
+            f="dist/$name.svg"
+            test -s "$f" || { echo "::error::$f is missing"; exit 1; }
+            if grep -qiE "something went wrong|could not be found|rate limit|bad credentials|not found" "$f"; then
+              echo "::error::$f contains an error card"; exit 1
+            fi
+          done
+          ls -la dist
+
+      - name: Publish to output branch
+        uses: crazy-max/ghaction-github-pages@v4
+        with:
+          target_branch: output
+          build_dir: dist
+          commit_message: Update profile cards
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # keep the Actions tab clean: only the latest successful run stays
+      - name: Delete old workflow runs
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          CURRENT: ${{ github.run_id }}
+        run: |
+          gh api --paginate "repos/$REPO/actions/runs?per_page=100" \
+            -q ".workflow_runs[] | select(.id != $CURRENT) | select(.status == \"completed\") | .id" |
+          while read -r id; do
+            gh api -X DELETE "repos/$REPO/actions/runs/$id" > /dev/null && echo "deleted run $id" || echo "could not delete run $id"
+          done
